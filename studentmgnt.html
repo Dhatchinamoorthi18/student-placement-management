@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Placement Dashboard </title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #f0f4fb;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      padding: 1.5rem;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+    }
+
+    .dashboard-wrapper {
+      max-width: 1400px;
+      width: 100%;
+    }
+
+    /* ----- HEADER ----- */
+    .dashboard-header {
+      background: linear-gradient(135deg, #0b2a4a 0%, #1a4a6e 100%);
+      padding: 1.8rem 2.5rem;
+      border-radius: 28px;
+      color: white;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 15px 35px rgba(11, 42, 74, 0.25);
+      margin-bottom: 2.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .dashboard-header::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -10%;
+      width: 300px;
+      height: 300px;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .college-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      z-index: 1;
+    }
+
+    .college-brand i {
+      font-size: 2.2rem;
+      color: #7bb3ff;
+    }
+
+    .college-name {
+      font-weight: 700;
+      font-size: 1.8rem;
+      letter-spacing: -0.5px;
+    }
+
+    .header-title {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 0.6rem 2rem;
+      border-radius: 40px;
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      z-index: 1;
+    }
+
+    .header-title h2 {
+      font-weight: 500;
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .header-title h2 i {
+      color: #ffd966;
+      font-size: 1.6rem;
+    }
+
+    /* ----- STATS CARDS ----- */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1.2rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: white;
+      padding: 1.2rem 1.5rem;
+      border-radius: 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+      border: 1px solid #eaf0f8;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      transition: transform 0.2s;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+    }
+
+    .stat-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      color: white;
+      flex-shrink: 0;
+    }
+
+    .stat-icon.blue { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+    .stat-icon.green { background: linear-gradient(135deg, #22c55e, #16a34a); }
+    .stat-icon.orange { background: linear-gradient(135deg, #f59e0b, #d97706); }
+    .stat-icon.purple { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+    .stat-icon.red { background: linear-gradient(135deg, #ef4444, #dc2626); }
+
+    .stat-info h4 {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #6b7f94;
+      font-weight: 600;
+    }
+
+    .stat-info .number {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #0b2a4a;
+      line-height: 1.2;
+    }
+
+    /* ----- CARD PANEL ----- */
+    .card-panel {
+      background: white;
+      border-radius: 24px;
+      padding: 1.8rem 2rem;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+      margin-bottom: 2rem;
+      border: 1px solid #eaf0f8;
+    }
+
+    .section-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #0b2a4a;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .section-title i {
+      color: #1f6e9e;
+      width: 1.8rem;
+    }
+
+    /* ----- FORM ----- */
+    .registration-form {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      gap: 1rem 1.5rem;
+    }
+
+    .form-group {
+      flex: 1 0 140px;
+      min-width: 120px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      color: #4a617c;
+      margin-bottom: 0.3rem;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 0.65rem 0.9rem;
+      border: 1.5px solid #e2ebf5;
+      border-radius: 14px;
+      font-size: 0.9rem;
+      background: #fafcff;
+      transition: 0.2s;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+      background: white;
+    }
+
+    .btn-add {
+      background: linear-gradient(135deg, #1a6e3c, #15803d);
+      border: none;
+      padding: 0.7rem 2.4rem;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: white;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      cursor: pointer;
+      transition: 0.2s;
+      box-shadow: 0 6px 14px rgba(26, 110, 60, 0.25);
+      margin-top: 4px;
+    }
+
+    .btn-add:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 24px rgba(26, 110, 60, 0.3);
+    }
+
+    /* ----- SEARCH BAR ----- */
+    .search-bar-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.2rem;
+    }
+
+    .search-input-group {
+      flex: 1;
+      min-width: 200px;
+      position: relative;
+    }
+
+    .search-input-group i {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #8ba0b8;
+      font-size: 0.9rem;
+    }
+
+    .search-input-group input {
+      width: 100%;
+      padding: 0.7rem 1rem 0.7rem 2.6rem;
+      border: 1.5px solid #e2ebf5;
+      border-radius: 40px;
+      font-size: 0.9rem;
+      background: #fafcff;
+      transition: 0.2s;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .search-input-group input:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+      background: white;
+    }
+
+    .filter-group {
+      display: flex;
+      gap: 0.6rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .filter-group select {
+      padding: 0.6rem 1.2rem;
+      border: 1.5px solid #e2ebf5;
+      border-radius: 40px;
+      background: #fafcff;
+      font-size: 0.85rem;
+      font-family: 'Inter', sans-serif;
+      color: #1a2e44;
+      cursor: pointer;
+    }
+
+    .filter-group select:focus {
+      outline: none;
+      border-color: #3b82f6;
+    }
+
+    /* ----- TABLE ----- */
+    .table-responsive {
+      overflow-x: auto;
+      border-radius: 16px;
+      border: 1px solid #eaf0f8;
+    }
+
+    .student-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+      background: white;
+    }
+
+    .student-table thead {
+      background: #f8faff;
+      border-bottom: 2px solid #e2ebf5;
+    }
+
+    .student-table th {
+      text-align: left;
+      padding: 0.9rem 1rem;
+      font-weight: 600;
+      color: #1a2e44;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+    }
+
+    .student-table td {
+      padding: 0.8rem 1rem;
+      border-bottom: 1px solid #edf3fa;
+      color: #1e3349;
+      vertical-align: middle;
+    }
+
+    .student-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .student-table tbody tr:hover {
+      background: #f8fbff;
+    }
+
+    .status-badge {
+      padding: 0.2rem 1rem;
+      border-radius: 40px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      display: inline-block;
+    }
+
+    .status-placed {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .status-not-placed {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .attendance-badge {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.2rem 0.8rem;
+      border-radius: 40px;
+      display: inline-block;
+    }
+
+    .attendance-good {
+      background: #dbeafe;
+      color: #1e40af;
+    }
+
+    .attendance-mid {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .attendance-low {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .performance-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .bar-track {
+      width: 80px;
+      height: 6px;
+      background: #e5edf5;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: 10px;
+      background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+      transition: width 0.4s;
+    }
+
+    .action-icon {
+      color: #a0b8cf;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: 0.15s;
+      padding: 0 4px;
+    }
+
+    .action-icon:hover {
+      color: #dc2626;
+      transform: scale(1.1);
+    }
+
+    .empty-row td {
+      text-align: center;
+      padding: 2.5rem 1rem;
+      color: #7b93ab;
+      font-style: italic;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.8rem;
+        padding: 1.5rem;
+      }
+      .header-title h2 {
+        font-size: 1.1rem;
+      }
+      .registration-form {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .btn-add {
+        justify-content: center;
+        margin-top: 0.3rem;
+      }
+      .card-panel {
+        padding: 1.2rem 1rem;
+      }
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .search-bar-wrapper {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .filter-group {
+        justify-content: stretch;
+      }
+      .filter-group select {
+        flex: 1;
+      }
+      .bar-track {
+        width: 50px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      body { padding: 0.8rem; }
+      .stats-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.8rem;
+      }
+      .stat-card {
+        padding: 0.8rem 1rem;
+      }
+      .stat-info .number {
+        font-size: 1.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="dashboard-wrapper">
+
+  <!-- HEADER -->
+  <header class="dashboard-header">
+    <div class="college-brand">
+      <i class="fas fa-university"></i>
+      <span class="college-name">JSR ENGINEERING COLLEGE</span>
+    </div>
+    <div class="header-title">
+      <h2><i class="fas fa-briefcase"></i> Student Placement Dashboard</h2>
+    </div>
+  </header>
+
+  <!-- STATS CARDS -->
+  <div class="stats-grid" id="statsGrid">
+    <div class="stat-card">
+      <div class="stat-icon blue"><i class="fas fa-users"></i></div>
+      <div class="stat-info">
+        <h4>Total Students</h4>
+        <div class="number" id="totalStudents">0</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon green"><i class="fas fa-check-circle"></i></div>
+      <div class="stat-info">
+        <h4>Placed</h4>
+        <div class="number" id="placedCount">0</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon orange"><i class="fas fa-clock"></i></div>
+      <div class="stat-info">
+        <h4>Not Placed</h4>
+        <div class="number" id="notPlacedCount">0</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon purple"><i class="fas fa-chart-line"></i></div>
+      <div class="stat-info">
+        <h4>Avg CGPA</h4>
+        <div class="number" id="avgCgpa">0.00</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon red"><i class="fas fa-calendar-check"></i></div>
+      <div class="stat-info">
+        <h4>Attendance ⚡</h4>
+        <div class="number" id="attendanceAvg">0%</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- REGISTRATION FORM -->
+  <section class="card-panel">
+    <div class="section-title">
+      <i class="fas fa-user-graduate"></i> Student Registration
+    </div>
+    <form id="studentForm" class="registration-form">
+      <div class="form-group">
+        <label><i class="fas fa-user"></i> Student Name</label>
+        <input type="text" id="studentName" placeholder="e.g. Ananya Sharma" required>
+      </div>
+      <div class="form-group">
+        <label><i class="fas fa-id-card"></i> Register Number</label>
+        <input type="text" id="regNumber" placeholder="e.g. 2021CS101" required>
+      </div>
+      <div class="form-group">
+        <label><i class="fas fa-code"></i> Department</label>
+        <input type="text" id="department" placeholder="e.g. CSE,AD, ECE" required>
+      </div>
+      <div class="form-group">
+        <label><i class="fas fa-star"></i> CGPA</label>
+        <input type="number" id="cgpa" placeholder="0.0 - 10.0" min="0" max="10" step="0.01" required>
+      </div>
+      <div class="form-group">
+        <label><i class="fas fa-percent"></i> Attendance %</label>
+        <input type="number" id="attendance" placeholder="0-100" min="0" max="100" step="1" value="85">
+      </div>
+      <div class="form-group">
+        <label><i class="fas fa-check-circle"></i> Placement Status</label>
+        <select id="placementStatus">
+          <option value="Placed">Placed</option>
+          <option value="Not Placed" selected>Not Placed</option>
+        </select>
+      </div>
+      <button type="submit" class="btn-add"><i class="fas fa-plus-circle"></i> Add Student</button>
+    </form>
+  </section>
+
+  <!-- SEARCH & FILTER + TABLE -->
+  <section class="card-panel" style="padding-bottom: 0.5rem;">
+    <div class="section-title" style="margin-bottom: 1rem;">
+      <i class="fas fa-table"></i> Student Records
+      <span style="margin-left: auto; font-size: 0.85rem; font-weight: 400; color: #4a617c;" id="studentCount">0 records</span>
+    </div>
+
+    <!-- Search & Filter -->
+    <div class="search-bar-wrapper">
+      <div class="search-input-group">
+        <i class="fas fa-search"></i>
+        <input type="text" id="searchInput" placeholder="Search by name, reg no, department...">
+      </div>
+      <div class="filter-group">
+        <select id="filterStatus">
+          <option value="all">All Status</option>
+          <option value="Placed">Placed</option>
+          <option value="Not Placed">Not Placed</option>
+        </select>
+        <select id="filterDepartment">
+          <option value="all">All Departments</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table class="student-table" id="studentTable">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Reg. No.</th>
+            <th>Department</th>
+            <th>CGPA</th>
+            <th>Attendance</th>
+            <th>Performance</th>
+            <th>Status</th>
+            <th style="text-align: center;">Action</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+          <tr class="empty-row">
+            <td colspan="8"><i class="fas fa-inbox" style="margin-right: 8px;"></i>No students added yet. Fill the form above.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+
+<script>
+  (function() {
+    // --- DOM refs ---
+    const form = document.getElementById('studentForm');
+    const tbody = document.getElementById('tableBody');
+    const studentCountSpan = document.getElementById('studentCount');
+
+    const nameInput = document.getElementById('studentName');
+    const regInput = document.getElementById('regNumber');
+    const deptInput = document.getElementById('department');
+    const cgpaInput = document.getElementById('cgpa');
+    const attendanceInput = document.getElementById('attendance');
+    const statusSelect = document.getElementById('placementStatus');
+
+    const searchInput = document.getElementById('searchInput');
+    const filterStatus = document.getElementById('filterStatus');
+    const filterDept = document.getElementById('filterDepartment');
+
+    // Stats
+    const totalSpan = document.getElementById('totalStudents');
+    const placedSpan = document.getElementById('placedCount');
+    const notPlacedSpan = document.getElementById('notPlacedCount');
+    const avgCgpaSpan = document.getElementById('avgCgpa');
+    const attendanceAvgSpan = document.getElementById('attendanceAvg');
+
+    // --- Data ---
+    let students = [];
+    let filteredStudents = [];
+
+    // --- Helpers ---
+    function escapeHtml(text) {
+      if (!text) return '';
+      const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+      return String(text).replace(/[&<>"']/g, m => map[m]);
+    }
+
+    function getAttendanceClass(att) {
+      if (att >= 80) return 'attendance-good';
+      if (att >= 60) return 'attendance-mid';
+      return 'attendance-low';
+    }
+
+    function getPerformanceLevel(cgpa) {
+      if (cgpa >= 8.5) return 90;
+      if (cgpa >= 7.5) return 75;
+      if (cgpa >= 6.5) return 60;
+      if (cgpa >= 5.5) return 45;
+      return 30;
+    }
+
+    function updateStats(list) {
+      const total = list.length;
+      const placed = list.filter(s => s.status === 'Placed').length;
+      const notPlaced = total - placed;
+      const avgCgpa = total > 0 ? (list.reduce((sum, s) => sum + s.cgpa, 0) / total) : 0;
+      const avgAtt = total > 0 ? Math.round(list.reduce((sum, s) => sum + s.attendance, 0) / total) : 0;
+
+      totalSpan.textContent = total;
+      placedSpan.textContent = placed;
+      notPlacedSpan.textContent = notPlaced;
+      avgCgpaSpan.textContent = avgCgpa.toFixed(2);
+      attendanceAvgSpan.textContent = avgAtt + '%';
+    }
+
+    function updateDepartmentFilter() {
+      const depts = [...new Set(students.map(s => s.department))].filter(Boolean);
+      const currentVal = filterDept.value;
+      filterDept.innerHTML = '<option value="all">All Departments</option>';
+      depts.forEach(d => {
+        const opt = document.createElement('option');
+        opt.value = d;
+        opt.textContent = d;
+        filterDept.appendChild(opt);
+      });
+      if (currentVal && depts.includes(currentVal)) filterDept.value = currentVal;
+    }
+
+    function filterData() {
+      const search = searchInput.value.toLowerCase().trim();
+      const status = filterStatus.value;
+      const dept = filterDept.value;
+
+      filteredStudents = students.filter(s => {
+        const matchSearch = !search || 
+          s.name.toLowerCase().includes(search) ||
+          s.regNo.toLowerCase().includes(search) ||
+          s.department.toLowerCase().includes(search);
+        const matchStatus = status === 'all' || s.status === status;
+        const matchDept = dept === 'all' || s.department === dept;
+        return matchSearch && matchStatus && matchDept;
+      });
+      renderTable();
+      updateStats(filteredStudents);
+    }
+
+    function renderTable() {
+      if (filteredStudents.length === 0) {
+        tbody.innerHTML = `<tr class="empty-row"><td colspan="8"><i class="fas fa-inbox" style="margin-right: 8px;"></i>No matching records.</td></tr>`;
+        studentCountSpan.textContent = '0 records';
+        return;
+      }
+
+      let html = '';
+      filteredStudents.forEach((student, idx) => {
+        const statusClass = student.status === 'Placed' ? 'status-placed' : 'status-not-placed';
+        const attClass = getAttendanceClass(student.attendance);
+        const perf = getPerformanceLevel(student.cgpa);
+        // find original index for delete
+        const origIndex = students.indexOf(student);
+        html += `
+          <tr>
+            <td><i class="fas fa-user-circle" style="color:#2b5f8a; margin-right: 8px;"></i>${escapeHtml(student.name)}</td>
+            <td><span style="font-weight: 500;">${escapeHtml(student.regNo)}</span></td>
+            <td>${escapeHtml(student.department)}</td>
+            <td><strong>${parseFloat(student.cgpa).toFixed(2)}</strong></td>
+            <td><span class="attendance-badge ${attClass}">${student.attendance}%</span></td>
+            <td>
+              <div class="performance-bar">
+                <span style="font-size:0.7rem; font-weight:600; color:#4a617c;">${perf}%</span>
+                <div class="bar-track"><div class="bar-fill" style="width:${perf}%;"></div></div>
+              </div>
+            </td>
+            <td><span class="status-badge ${statusClass}">${escapeHtml(student.status)}</span></td>
+            <td style="text-align: center;">
+              <span class="action-icon" data-index="${origIndex}" title="Remove student"><i class="fas fa-trash-alt"></i></span>
+            </td>
+          </tr>
+        `;
+      });
+      tbody.innerHTML = html;
+      studentCountSpan.textContent = filteredStudents.length + ' record' + (filteredStudents.length !== 1 ? 's' : '');
+
+      // Delete listeners
+      document.querySelectorAll('.action-icon[data-index]').forEach(icon => {
+        icon.addEventListener('click', function(e) {
+          const idx = parseInt(this.getAttribute('data-index'), 10);
+          deleteStudent(idx);
+        });
+      });
+    }
+
+    function deleteStudent(index) {
+      if (index >= 0 && index < students.length) {
+        const removed = students[index];
+        if (confirm(`Remove student "${removed.name}" (${removed.regNo}) ?`)) {
+          students.splice(index, 1);
+          updateDepartmentFilter();
+          filterData();
+        }
+      }
+    }
+
+    // --- Add Student ---
+    function addStudent(event) {
+      event.preventDefault();
+
+      const name = nameInput.value.trim();
+      const regNo = regInput.value.trim();
+      const department = deptInput.value.trim();
+      const cgpaRaw = cgpaInput.value.trim();
+      const attendanceRaw = attendanceInput.value.trim();
+      const status = statusSelect.value;
+
+      if (!name || !regNo || !department || !cgpaRaw) {
+        alert('Please fill in all fields (Name, Register Number, Department, CGPA).');
+        return;
+      }
+
+      const cgpa = parseFloat(cgpaRaw);
+      if (isNaN(cgpa) || cgpa < 0 || cgpa > 10) {
+        alert('CGPA must be between 0.0 and 10.0');
+        return;
+      }
+
+      let attendance = parseInt(attendanceRaw);
+      if (isNaN(attendance) || attendance < 0 || attendance > 100) {
+        attendance = 85;
+      }
+
+      if (students.some(s => s.regNo.toLowerCase() === regNo.toLowerCase())) {
+        alert(`Student with register number "${regNo}" already exists.`);
+        return;
+      }
+
+      students.push({ name, regNo, department, cgpa, attendance, status });
+      updateDepartmentFilter();
+      filterData();
+      form.reset();
+      statusSelect.value = 'Not Placed';
+      attendanceInput.value = '85';
+      nameInput.focus();
+    }
+
+    // --- Init sample data ---
+    function initSampleData() {
+      if (students.length === 0) {
+        students = [
+          { name: 'Priya ', regNo: '2021CS045', department: 'CSE', cgpa: 8.72, attendance: 92, status: 'Placed' },
+          { name: 'Ramkumar', regNo: '2021EC112', department: 'ECE', cgpa: 7.45, attendance: 78, status: 'Not Placed' },
+          { name: 'Surya', regNo: '2021AD023', department: 'AD', cgpa: 9.10, attendance: 95, status: 'Placed' },
+          { name: 'Prabu', regNo: '2021AD067', department: 'AD', cgpa: 7.85, attendance: 75, status: 'Not Placed' },
+          { name: 'Divya', regNo: '2021EC089', department: 'ECE', cgpa: 8.30, attendance: 88, status: 'Placed' },
+        ];
+        updateDepartmentFilter();
+        filterData();
+      }
+    }
+
+    // --- Event listeners ---
+    form.addEventListener('submit', addStudent);
+    searchInput.addEventListener('input', filterData);
+    filterStatus.addEventListener('change', filterData);
+    filterDept.addEventListener('change', filterData);
+
+    // Init
+    initSampleData();
+  })();
+</script>
+
+</body>
+</html>
